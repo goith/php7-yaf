@@ -1,7 +1,5 @@
 FROM php:7.1.19-fpm-alpine3.7
 
-RUN mkdir -p /usr/local/scws
-
 RUN set -ex \
     ## install pdo_mysql mysqli
     && ( \
