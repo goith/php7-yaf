@@ -1,7 +1,7 @@
 ## docker php服务的 base 镜像
 
 ### php 信息
-
+```
 PHP版本： 7.1.16
 
 [PHP Modules]
@@ -48,3 +48,4 @@ zlib
 
 [Zend Modules]
 Zend OPcache
+```
