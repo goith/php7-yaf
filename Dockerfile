@@ -1,14 +1,7 @@
-FROM php:7.1.19-fpm-alpine3.7
+FROM php:7.1.32-fpm-alpine3.10
 
-RUN set -ex \
-    ## install pdo_mysql mysqli
-    && ( \
-        docker-php-ext-install  pdo_mysql mysqli opcache \
-    ) \
-    ## install gd
-    ## refer https://github.com/docker-library/php/issues/225
-    && ( \
-        apk add \
+RUN set -ex && docker-php-ext-install  pdo_mysql mysqli opcache \
+    && ( apk add \
             --no-cache \
             freetype \
             libpng \
@@ -21,19 +14,10 @@ RUN set -ex \
             --with-freetype-dir=/usr/include/ \
             --with-png-dir=/usr/include/ \
             --with-jpeg-dir=/usr/include/ \
-
-        && docker-php-ext-install gd \
-    ) \
-    ## install mcrypt
-    && ( \
-        apk add \
-            --no-cache \
-            libmcrypt-dev \
-        && docker-php-ext-configure mcrypt \
-            --with-mcrypt \
-        && docker-php-ext-install  mcrypt \
-    ) 
-
+        && docker-php-ext-install gd) \
+    && ( apk add --no-cache libmcrypt-dev \
+        && docker-php-ext-configure mcrypt --with-mcrypt \
+        && docker-php-ext-install  mcrypt) 
 ENV PHPIZE_DEPS \
         autoconf \
         dpkg-dev dpkg \
@@ -53,15 +37,10 @@ RUN set -ex \
         openssl-dev \
         libxml2-dev \
         sqlite-dev \
-    \
-    ## intall apcu
-    && (\
-        pecl install redis yaf-3.0.5 apcu \
-    ) \
+    && pecl install redis yaf-3.0.5 apcu \
     && echo "extension=redis.so" >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini  \
     && echo "extension=yaf.so" >> /usr/local/etc/php/conf.d/docker-php-ext-yaf.ini \
     && echo "extension=apcu.so" >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini \
-    \
     && pecl update-channels \
     && rm -rf /tmp/pear ~/.pearrc
 
